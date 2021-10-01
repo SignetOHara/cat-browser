@@ -3,12 +3,8 @@ import { useEffect, useState } from 'react';
 import { Service } from '../types/Service';
 import { Breed } from '../types/Breed';
 
-export interface Breeds {
-  results: Breed[];
-}
-
 export const useGetBreeds = () => {
-  const [result, setResult] = useState<Service<Breeds>>({
+  const [result, setResult] = useState<Service<Breed[]>>({
     status: 'loading',
   });
 
