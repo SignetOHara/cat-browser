@@ -8,12 +8,12 @@ interface Props {}
 export const Home = (props: Props) => {
   return (
     <main className={styles.home}>
-      <Container>
+      <Container className={styles.container}>
         {/* Check bootstrap header */}
         <header>
           <h1>Cat Browser</h1>
         </header>
-        <Row>
+        <Row className={styles.breedList}>
           <BreedList />
         </Row>
       </Container>

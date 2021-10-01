@@ -1,7 +1,17 @@
 .home {
-  padding: 20px 0;
+  padding: 1.25rem 0;
+}
 
-  .card {
-    margin-bottom: 20px;
+.container {
+  padding: 0 0.9375rem !important;
+}
+
+.breedList {
+  padding: 0.625rem 0;
+}
+
+@media screen and (min-width: 1400px) {
+  .container {
+    max-width: 1140px !important;
   }
 }
