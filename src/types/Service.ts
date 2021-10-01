@@ -10,7 +10,7 @@ interface ServiceLoaded<T> {
 }
 interface ServiceError {
   status: 'error';
-  error: Error;
+  error: Error | unknown;
 }
 export type Service<T> =
   | ServiceInit
