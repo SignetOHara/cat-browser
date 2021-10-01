@@ -5,10 +5,14 @@ import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import styles from './BreedList.module.scss';
 
-export const BreedList = () => {
+interface Props {
+  setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+}
+
+export const BreedList = ({ setError }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | unknown>();
+  const [loading, setLoading] = useState(true);
+
   const [selectedBreed, setSelectedBreed] = useState<string>();
 
   const service = useGetBreeds();

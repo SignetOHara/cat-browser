@@ -27,7 +27,7 @@ export const useGetBreeds = () => {
     };
     try {
       fetchBreedList();
-    } catch (error) {
+    } catch (error: any) {
       setResult({ status: 'error', error });
     }
   }, []);
