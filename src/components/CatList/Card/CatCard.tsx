@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import { Cat } from '../../../types/Cat';
 import styles from './CatCard.module.scss';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   cat: Cat;
@@ -11,9 +12,12 @@ interface Props {
 }
 
 export const CatCard = ({ cat, setSelectedCat, setLoadingCatImg }: Props) => {
+  const history = useHistory();
+
   const handleSelectCat = () => {
-    setLoadingCatImg(true);
     setSelectedCat(cat);
+    history.push(cat.id);
+    setLoadingCatImg(true);
   };
 
   return (
@@ -25,7 +29,7 @@ export const CatCard = ({ cat, setSelectedCat, setLoadingCatImg }: Props) => {
           alt={`An ${cat.breeds[0].name} cat`}
         />
         <Card.Body>
-          <Button href={cat.id} variant="primary" onClick={handleSelectCat}>
+          <Button onClick={handleSelectCat} variant="primary">
             View details
           </Button>
         </Card.Body>

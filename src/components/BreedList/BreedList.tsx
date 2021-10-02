@@ -10,23 +10,23 @@ interface Props {
   selectedBreed: string;
   setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  catList: Cat[];
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
-  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoadingCats: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const BreedList = ({
   setError,
   setSelectedBreed,
   selectedBreed,
+  catList,
   setCatList,
-  setPage,
   setDisappear,
-  setDisabled,
+  setIsLoadingCats,
 }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
-  const [loading, setLoading] = useState(true);
+  const [loadingBreedList, setLoadingBreedList] = useState(true);
 
   const service = useGetBreeds();
 
@@ -34,29 +34,20 @@ export const BreedList = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
-      setLoading(false);
+      setLoadingBreedList(false);
     } else if (service.status === 'error') {
       setError(service.error);
-      setLoading(false);
+      setLoadingBreedList(false);
     }
   }, [service, setError]);
-
-  // Disable Load more button if selectedBreed is default
-  useEffect(() => {
-    if (selectedBreed !== 'default') {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
-  }, [selectedBreed, setDisabled]);
 
   // Handle user selecting a different breed in drop down - clears catList, resets page, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
     setSelectedBreed(breed);
     setCatList([]);
-    setPage(1);
     setDisappear(false);
+    setIsLoadingCats(true);
   };
 
   return (
@@ -68,7 +59,7 @@ export const BreedList = ({
           aria-label="Select Breed"
           value={selectedBreed}
           onChange={handleChange}
-          disabled={loading}
+          disabled={loadingBreedList}
         >
           <option value="default">Select breed</option>
           {breedList &&

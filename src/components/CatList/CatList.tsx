@@ -17,7 +17,7 @@ export const CatList = ({
   if (catList.length === 0) {
     return (
       <Col xs={12} className={styles.noCats}>
-        <p>No cats available</p>
+        No cats available
       </Col>
     );
   } else {

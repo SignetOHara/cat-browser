@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetCats } from '../../hooks/useGetCats';
 import { BreedList } from '../../components/BreedList/BreedList';
 import { CatList } from '../../components/CatList/CatList';
@@ -29,42 +29,50 @@ export const Home = ({
   setLoadingCatImg,
 }: Props) => {
   const [error, setError] = useState<Error>();
-  const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoadingCats, setIsLoadingCats] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
   const [disappear, setDisappear] = useState(false);
-  const [disabled, setDisabled] = useState(true);
 
-  useGetCats({
-    isLoaded,
-    setIsLoaded,
-    setIsLoading,
-    catList,
-    setCatList,
-    setDisappear,
+  const service = useGetCats({
     selectedBreed,
-    page,
+    loadMore,
+    setLoadMore,
+    catList,
+    setDisappear,
   });
 
+  // Handle cat list fetch success or fail state
+  useEffect(() => {
+    if (service.status === 'loaded') {
+      console.log(service.payload);
+      setCatList((prevCats) => [...prevCats, ...service.payload]);
+      setIsLoadingCats(false);
+    } else if (service.status === 'error') {
+      setError(service.error);
+      setIsLoadingCats(false);
+    }
+  }, [service, setError, setCatList]);
+
   const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setPage(1);
+    setLoadMore(true);
+    setIsLoadingCats(true);
   };
 
   return (
     <main className={styles.home}>
       <Container className={styles.container}>
         <header>
-          <h1>Cat Browser</h1>
+          <h1 className={styles.title}>Cat Browser</h1>
         </header>
         <Row className={styles.breedList}>
           <BreedList
             selectedBreed={selectedBreed}
             setSelectedBreed={setSelectedBreed}
             setError={setError}
+            catList={catList}
             setCatList={setCatList}
-            setPage={setPage}
             setDisappear={setDisappear}
-            setDisabled={setDisabled}
+            setIsLoadingCats={setIsLoadingCats}
           />
         </Row>
         <Row>
@@ -78,11 +86,11 @@ export const Home = ({
           <Col xs={12} sm={6} md={3}>
             <Button
               variant="success"
-              disabled={disabled}
+              disabled={catList.length === 0 ? true : false}
               className={disappear ? styles.disappear : ''}
               onClick={handleLoadMore}
             >
-              {isLoading ? 'Loading cats...' : 'Load more'}
+              {isLoadingCats ? 'Loading cats...' : 'Load more'}
             </Button>
           </Col>
         </Row>
