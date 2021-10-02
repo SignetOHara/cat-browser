@@ -27,13 +27,14 @@ export const Home = ({
   setCatList,
 }: Props) => {
   const [error, setError] = useState<Error>();
-  const [loadMore, setLoadMore] = useState(false);
+  const [fetchMore, setFetchMore] = useState(false);
   const [disappear, setDisappear] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const service = useGetCats({
     selectedBreed,
-    loadMore,
-    setLoadMore,
+    fetchMore,
+    setFetchMore,
     catList,
     setDisappear,
   });
@@ -42,15 +43,17 @@ export const Home = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setCatList((prevCats) => [...prevCats, ...service.payload]);
+      setDisabled(false);
     } else if (service.status === 'error') {
       setError(service.error);
+      setDisabled(false);
     }
   }, [service, setError, setCatList]);
 
   console.log(service);
 
-  const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setLoadMore(true);
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setFetchMore(true);
   };
 
   return (
@@ -67,6 +70,8 @@ export const Home = ({
             catList={catList}
             setCatList={setCatList}
             setDisappear={setDisappear}
+            disabled={disabled}
+            setDisabled={setDisabled}
           />
         </Row>
         <Row>
@@ -78,7 +83,7 @@ export const Home = ({
               <Button
                 variant="success"
                 disabled={catList.length === 0 ? true : false}
-                onClick={handleLoadMore}
+                onClick={handleClick}
               >
                 {service.status === 'loading' ? 'Loading cats...' : 'Load more'}
               </Button>

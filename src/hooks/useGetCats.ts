@@ -4,16 +4,16 @@ import { Cat } from '../types/Cat';
 
 interface Props {
   selectedBreed: string;
-  loadMore: boolean;
-  setLoadMore: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchMore: boolean;
+  setFetchMore: React.Dispatch<React.SetStateAction<boolean>>;
   catList: Cat[];
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useGetCats = ({
   selectedBreed,
-  loadMore,
-  setLoadMore,
+  fetchMore,
+  setFetchMore,
   catList,
   setDisappear,
 }: Props) => {
@@ -67,12 +67,12 @@ export const useGetCats = ({
     } catch (error: any) {
       setResult({ status: 'error', error });
     }
-    if (loadMore) {
+    if (fetchMore) {
       fetchCatList();
-      setLoadMore(false);
+      setFetchMore(false);
     }
     // }, [selectedBreed, loadMore, setLoadMore, setDisappear]);
-  }, [selectedBreed, loadMore]);
+  }, [selectedBreed, fetchMore]);
 
   return result;
 };

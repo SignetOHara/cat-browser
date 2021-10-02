@@ -13,6 +13,8 @@ interface Props {
   catList: Cat[];
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
+  disabled: boolean;
+  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const BreedList = ({
@@ -22,6 +24,8 @@ export const BreedList = ({
   catList,
   setCatList,
   setDisappear,
+  disabled,
+  setDisabled,
 }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
 
@@ -40,6 +44,7 @@ export const BreedList = ({
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
     setSelectedBreed(breed);
+    setDisabled(true);
     setCatList([]);
     setDisappear(false);
   };
@@ -53,7 +58,7 @@ export const BreedList = ({
           aria-label="Select Breed"
           value={selectedBreed}
           onChange={handleChange}
-          disabled={!catList}
+          disabled={disabled}
         >
           <option value="default">Select breed</option>
           {breedList &&
