@@ -27,16 +27,16 @@ export const Home = ({
   setCatList,
 }: Props) => {
   const [error, setError] = useState<Error>();
-  const [fetchMore, setFetchMore] = useState(false);
   const [disappear, setDisappear] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [fetchMore, setFetchMore] = useState(false);
 
+  // Initial fetch of catList
   const service = useGetCats({
     selectedBreed,
-    fetchMore,
-    setFetchMore,
     catList,
     setDisappear,
+    fetchMore,
   });
 
   // Handle cat list fetch success or fail state
@@ -44,13 +44,13 @@ export const Home = ({
     if (service.status === 'loaded') {
       setCatList((prevCats) => [...prevCats, ...service.payload]);
       setDisabled(false);
+      setFetchMore(false);
     } else if (service.status === 'error') {
       setError(service.error);
       setDisabled(false);
+      setFetchMore(false);
     }
   }, [service, setError, setCatList]);
-
-  console.log(service);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setFetchMore(true);

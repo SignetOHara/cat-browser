@@ -4,18 +4,16 @@ import { Cat } from '../types/Cat';
 
 interface Props {
   selectedBreed: string;
-  fetchMore: boolean;
-  setFetchMore: React.Dispatch<React.SetStateAction<boolean>>;
   catList: Cat[];
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
+  fetchMore: boolean;
 }
 
 export const useGetCats = ({
   selectedBreed,
-  fetchMore,
-  setFetchMore,
   catList,
   setDisappear,
+  fetchMore,
 }: Props) => {
   const [result, setResult] = useState<Service<Cat[]>>({
     status: 'loading',
@@ -56,22 +54,15 @@ export const useGetCats = ({
       }
       // Hide load more button if no more cats to be added to list
       if (catList.length > 0 && filteredCats.length === 0) {
-        console.log(filteredCats);
         setDisappear(true);
       }
     };
 
-    // setResult({ status: 'loaded', payload: responseData });
     try {
       fetchCatList();
     } catch (error: any) {
       setResult({ status: 'error', error });
     }
-    if (fetchMore) {
-      fetchCatList();
-      setFetchMore(false);
-    }
-    // }, [selectedBreed, loadMore, setLoadMore, setDisappear]);
   }, [selectedBreed, fetchMore]);
 
   return result;
