@@ -8,16 +8,14 @@ import { useHistory } from 'react-router-dom';
 interface Props {
   cat: Cat;
   setSelectedCat: React.Dispatch<React.SetStateAction<Cat>>;
-  setLoadingCatImg: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CatCard = ({ cat, setSelectedCat, setLoadingCatImg }: Props) => {
+export const CatCard = ({ cat, setSelectedCat }: Props) => {
   const history = useHistory();
 
   const handleSelectCat = () => {
     setSelectedCat(cat);
     history.push(cat.id);
-    setLoadingCatImg(true);
   };
 
   return (

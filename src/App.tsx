@@ -9,7 +9,6 @@ function App() {
   const [selectedCat, setSelectedCat] = useState<Cat>({} as Cat);
   const [catList, setCatList] = useState<Cat[]>([]);
   const [selectedBreed, setSelectedBreed] = useState('default');
-  const [loadingCatImg, setLoadingCatImg] = useState(false);
 
   return (
     <Switch>
@@ -23,7 +22,6 @@ function App() {
             setSelectedBreed={setSelectedBreed}
             catList={catList}
             setCatList={setCatList}
-            setLoadingCatImg={setLoadingCatImg}
           />
         )}
       ></Route>
@@ -34,8 +32,6 @@ function App() {
             selectedCat={selectedCat}
             setCatList={setCatList}
             setSelectedBreed={setSelectedBreed}
-            loadingCatImg={loadingCatImg}
-            setLoadingCatImg={setLoadingCatImg}
           />
         )}
       />

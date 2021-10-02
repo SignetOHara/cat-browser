@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useHistory } from 'react-router';
 import { Cat } from '../../types/Cat';
 import Container from 'react-bootstrap/Container';
@@ -9,17 +10,14 @@ interface Props {
   selectedCat: Cat;
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
-  loadingCatImg: boolean;
-  setLoadingCatImg: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const CatPage = ({
   selectedCat,
   setCatList,
   setSelectedBreed,
-  loadingCatImg,
-  setLoadingCatImg,
 }: Props) => {
+  const [loading, setLoading] = useState(true);
   const history = useHistory();
 
   const catInfo = selectedCat.breeds;
@@ -35,10 +33,8 @@ export const CatPage = ({
   return (
     <div className={styles.cat}>
       <Container>
-        {loadingCatImg && <h1 className={styles.loading}>Loading...</h1>}
-        <Card
-          style={!loadingCatImg ? { display: 'block' } : { display: 'none' }}
-        >
+        {loading && <h1 className={styles.loading}>Loading...</h1>}
+        <Card style={!loading ? { display: 'block' } : { display: 'none' }}>
           <Card.Header>
             <Button variant="primary" onClick={handleReFetch}>
               Back
@@ -47,7 +43,7 @@ export const CatPage = ({
           <Card.Img
             src={selectedCat.url}
             alt={name}
-            onLoad={() => setLoadingCatImg(false)}
+            onLoad={() => setLoading(false)}
           />
           <Card.Body>
             <h1>{name}</h1>

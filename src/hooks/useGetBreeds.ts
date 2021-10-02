@@ -8,6 +8,7 @@ export const useGetBreeds = () => {
   });
 
   useEffect(() => {
+    setResult({ status: 'loading' });
     const fetchBreedList = async () => {
       const requestHeaders: HeadersInit = new Headers();
       requestHeaders.set('x-api-Key', process.env.REACT_APP_CAT_API as string);

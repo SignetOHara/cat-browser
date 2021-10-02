@@ -17,7 +17,6 @@ interface Props {
   setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
   catList: Cat[];
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
-  setLoadingCatImg: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const Home = ({
@@ -26,10 +25,8 @@ export const Home = ({
   setSelectedBreed,
   catList,
   setCatList,
-  setLoadingCatImg,
 }: Props) => {
   const [error, setError] = useState<Error>();
-  const [isLoadingCats, setIsLoadingCats] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
   const [disappear, setDisappear] = useState(false);
 
@@ -45,16 +42,15 @@ export const Home = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setCatList((prevCats) => [...prevCats, ...service.payload]);
-      setIsLoadingCats(false);
     } else if (service.status === 'error') {
       setError(service.error);
-      setIsLoadingCats(false);
     }
   }, [service, setError, setCatList]);
 
+  console.log(service);
+
   const handleLoadMore = (e: React.MouseEvent<HTMLButtonElement>) => {
     setLoadMore(true);
-    setIsLoadingCats(true);
   };
 
   return (
@@ -71,15 +67,10 @@ export const Home = ({
             catList={catList}
             setCatList={setCatList}
             setDisappear={setDisappear}
-            setIsLoadingCats={setIsLoadingCats}
           />
         </Row>
         <Row>
-          <CatList
-            catList={catList}
-            setSelectedCat={setSelectedCat}
-            setLoadingCatImg={setLoadingCatImg}
-          />
+          <CatList catList={catList} setSelectedCat={setSelectedCat} />
         </Row>
         <Row>
           <Col xs={12} sm={6} md={3}>
@@ -89,7 +80,7 @@ export const Home = ({
                 disabled={catList.length === 0 ? true : false}
                 onClick={handleLoadMore}
               >
-                {isLoadingCats ? 'Loading cats...' : 'Load more'}
+                {service.status === 'loading' ? 'Loading cats...' : 'Load more'}
               </Button>
             )}
           </Col>

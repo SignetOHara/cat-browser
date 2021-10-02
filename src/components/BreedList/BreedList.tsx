@@ -13,7 +13,6 @@ interface Props {
   catList: Cat[];
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsLoadingCats: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const BreedList = ({
@@ -23,10 +22,8 @@ export const BreedList = ({
   catList,
   setCatList,
   setDisappear,
-  setIsLoadingCats,
 }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
-  const [loadingBreedList, setLoadingBreedList] = useState(true);
 
   const service = useGetBreeds();
 
@@ -34,20 +31,17 @@ export const BreedList = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
-      setLoadingBreedList(false);
     } else if (service.status === 'error') {
       setError(service.error);
-      setLoadingBreedList(false);
     }
   }, [service, setError]);
 
-  // Handle user selecting a different breed in drop down - clears catList, resets page, redisplays load button
+  // Handle user selecting a different breed in drop down - clears catList, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
     setSelectedBreed(breed);
     setCatList([]);
     setDisappear(false);
-    setIsLoadingCats(true);
   };
 
   return (
@@ -59,7 +53,7 @@ export const BreedList = ({
           aria-label="Select Breed"
           value={selectedBreed}
           onChange={handleChange}
-          disabled={loadingBreedList}
+          disabled={!catList}
         >
           <option value="default">Select breed</option>
           {breedList &&

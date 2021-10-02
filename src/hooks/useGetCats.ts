@@ -22,6 +22,7 @@ export const useGetCats = ({
   });
 
   useEffect(() => {
+    setResult({ status: 'loading' });
     const fetchCatList = async () => {
       const requestHeaders: HeadersInit = new Headers();
       requestHeaders.set('x-api-Key', process.env.REACT_APP_CAT_API as string);
@@ -70,7 +71,7 @@ export const useGetCats = ({
       fetchCatList();
       setLoadMore(false);
     }
-  // }, [selectedBreed, loadMore, setLoadMore, setDisappear]);
+    // }, [selectedBreed, loadMore, setLoadMore, setDisappear]);
   }, [selectedBreed, loadMore]);
 
   return result;

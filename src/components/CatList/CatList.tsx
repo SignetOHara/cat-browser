@@ -6,14 +6,9 @@ import styles from './CatList.module.scss';
 interface Props {
   catList: Cat[];
   setSelectedCat: React.Dispatch<React.SetStateAction<Cat>>;
-  setLoadingCatImg: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CatList = ({
-  catList,
-  setSelectedCat,
-  setLoadingCatImg,
-}: Props) => {
+export const CatList = ({ catList, setSelectedCat }: Props) => {
   if (catList.length === 0) {
     return (
       <Col xs={12} className={styles.noCats}>
@@ -24,12 +19,7 @@ export const CatList = ({
     return (
       <>
         {catList.map((cat) => (
-          <CatCard
-            key={cat.id}
-            setSelectedCat={setSelectedCat}
-            cat={cat}
-            setLoadingCatImg={setLoadingCatImg}
-          />
+          <CatCard key={cat.id} setSelectedCat={setSelectedCat} cat={cat} />
         ))}
       </>
     );
