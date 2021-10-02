@@ -44,7 +44,6 @@ export const Home = ({
   // Handle cat list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {
-      console.log(service.payload);
       setCatList((prevCats) => [...prevCats, ...service.payload]);
       setIsLoadingCats(false);
     } else if (service.status === 'error') {
@@ -84,18 +83,19 @@ export const Home = ({
         </Row>
         <Row>
           <Col xs={12} sm={6} md={3}>
-            <Button
-              variant="success"
-              disabled={catList.length === 0 ? true : false}
-              className={disappear ? styles.disappear : ''}
-              onClick={handleLoadMore}
-            >
-              {isLoadingCats ? 'Loading cats...' : 'Load more'}
-            </Button>
+            {!disappear && (
+              <Button
+                variant="success"
+                disabled={catList.length === 0 ? true : false}
+                onClick={handleLoadMore}
+              >
+                {isLoadingCats ? 'Loading cats...' : 'Load more'}
+              </Button>
+            )}
           </Col>
         </Row>
       </Container>
-      {error && <Error error={error} setError={setError} />}
+      {error && <Error error={error} />}
     </main>
   );
 };

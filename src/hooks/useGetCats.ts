@@ -39,6 +39,7 @@ export const useGetCats = ({
       const responseData = await response.json();
 
       let filteredCats: Cat[] = [];
+
       // Initial fetch
       if (catList.length === 0) {
         setResult({ status: 'loaded', payload: responseData });
@@ -54,6 +55,7 @@ export const useGetCats = ({
       }
       // Hide load more button if no more cats to be added to list
       if (catList.length > 0 && filteredCats.length === 0) {
+        console.log(filteredCats);
         setDisappear(true);
       }
     };

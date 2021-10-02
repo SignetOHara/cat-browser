@@ -11,9 +11,6 @@ function App() {
   const [selectedBreed, setSelectedBreed] = useState('default');
   const [loadingCatImg, setLoadingCatImg] = useState(false);
 
-  console.log(selectedCat);
-  
-
   return (
     <Switch>
       <Route

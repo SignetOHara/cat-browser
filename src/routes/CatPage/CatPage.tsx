@@ -1,6 +1,5 @@
 import { useHistory } from 'react-router';
 import { Cat } from '../../types/Cat';
-// import {useRefetch} from '../../hooks/useRefetch';
 import Container from 'react-bootstrap/Container';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
@@ -30,18 +29,13 @@ export const CatPage = ({
   const handleReFetch = () => {
     setCatList([]);
     history.push(`/?breed=${id}`);
-    setSelectedBreed(id)
+    setSelectedBreed(id);
   };
 
   return (
     <div className={styles.cat}>
       <Container>
-        <h1
-          style={loadingCatImg ? { display: 'block' } : { display: 'none' }}
-          className={styles.loading}
-        >
-          Loading...
-        </h1>
+        {loadingCatImg && <h1 className={styles.loading}>Loading...</h1>}
         <Card
           style={!loadingCatImg ? { display: 'block' } : { display: 'none' }}
         >

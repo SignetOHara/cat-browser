@@ -3,10 +3,9 @@ import Alert from 'react-bootstrap/Alert';
 
 interface Props {
   error: Error;
-  setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
 }
 
-export const Error = ({ error, setError }: Props) => {
+export const Error = ({ error }: Props) => {
   const [show, setShow] = useState(false);
 
   if (error) {
