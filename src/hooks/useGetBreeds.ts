@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { Service } from '../types/Service';
 import { Breed } from '../types/Breed';
 

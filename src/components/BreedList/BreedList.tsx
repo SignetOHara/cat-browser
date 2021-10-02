@@ -1,25 +1,36 @@
 import { useState, useEffect } from 'react';
 import { useGetBreeds } from '../../hooks/useGetBreeds';
 import { Breed } from '../../types/Breed';
+import { Cat } from '../../types/Cat';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import styles from './BreedList.module.scss';
 
 interface Props {
+  selectedBreed: string;
+  setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
+  setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
+  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
+  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BreedList = ({ setError }: Props) => {
+export const BreedList = ({
+  setError,
+  setSelectedBreed,
+  selectedBreed,
+  setCatList,
+  setPage,
+  setDisappear,
+  setDisabled,
+}: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
   const [loading, setLoading] = useState(true);
 
-  const [selectedBreed, setSelectedBreed] = useState<string>();
-
   const service = useGetBreeds();
-  console.log(service);
 
-  // handle fetch error Message as an alert / banner: “Apologies but we could not load new cats for you at this time! Miau!
-
+  // Handle breed list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
@@ -28,16 +39,29 @@ export const BreedList = ({ setError }: Props) => {
       setError(service.error);
       setLoading(false);
     }
-  }, [service]);
+  }, [service, setError]);
 
+  // Disable Load more button if selectedBreed is default
+  useEffect(() => {
+    if (selectedBreed !== 'default') {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [selectedBreed, setDisabled]);
+
+  // Handle user selecting a different breed in drop down - clears catList, resets page, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
     setSelectedBreed(breed);
+    setCatList([]);
+    setPage(1);
+    setDisappear(false);
   };
 
   return (
-    <Col sm={6} md={3} xs={12}>
-      <Form.Group className={styles.formGroup} controlId="breedList">
+    <Col xs={12} sm={6} md={3}>
+      <Form.Group className={styles.formGroup}>
         <Form.Label htmlFor="breed">Breed</Form.Label>
         <Form.Select
           id="breed"

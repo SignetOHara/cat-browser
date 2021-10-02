@@ -10,6 +10,10 @@
   padding: 0.625rem 0;
 }
 
+.disappear {
+  display: none;
+}
+
 @media screen and (min-width: 1400px) {
   .container {
     max-width: 1140px !important;
