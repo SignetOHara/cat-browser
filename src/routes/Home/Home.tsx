@@ -54,6 +54,7 @@ export const Home = ({
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setFetchMore(true);
+    setDisabled(true);
   };
 
   return (
