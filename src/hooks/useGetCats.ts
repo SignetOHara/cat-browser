@@ -1,19 +1,13 @@
-import { memo, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Service } from '../types/Service';
 import { Cat } from '../types/Cat';
+import { State } from '../reducers/reducers';
 
 interface Props {
-  setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
-  state: {
-    disabled: boolean;
-    fetchMore: boolean;
-    selectedBreed: string;
-    catList: Cat[];
-    error: Error | null;
-  };
+  state: State;
 }
 
-export const useGetCats = ({ setDisappear, state }: Props) => {
+export const useGetCats = ({ state }: Props) => {
   const [result, setResult] = useState<Service<Cat[]>>({
     status: 'loading',
   });
@@ -37,25 +31,7 @@ export const useGetCats = ({ setDisappear, state }: Props) => {
       }
 
       const responseData = await response.json();
-      let filteredCats: Cat[] = [];
-
-      // Initial fetch
-      if (state.catList.length === 0) {
-        setResult({ status: 'loaded', payload: responseData });
-      } else {
-        // Store current IDs in catList inside a constant.
-        const mappedCatIds = state.catList.map((catObj) => catObj.id);
-        // Filter through most recent fetch, only saving cats that don't already have IDs in catlist
-        filteredCats = responseData.filter(
-          (cat: Cat) => !mappedCatIds.includes(cat.id)
-        );
-        // Add filtered cats to the payload.
-        setResult({ status: 'loaded', payload: filteredCats });
-      }
-      // Hide load more button if no more cats to be added to list
-      if (state.catList.length > 0 && filteredCats.length === 0) {
-        setDisappear(true);
-      }
+      setResult({ status: 'loaded', payload: responseData });
     };
     try {
       fetchCatList();

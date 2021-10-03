@@ -1,34 +1,26 @@
 import { memo, useState, useEffect } from 'react';
 import { useGetBreeds } from '../../hooks/useGetBreeds';
-import { Action } from '../../reducers/reducers';
+import { Action, State } from '../../reducers/reducers';
 import { Breed } from '../../types/Breed';
-import { Cat } from '../../types/Cat';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import styles from './BreedList.module.scss';
 
 interface Props {
-  state: {
-    disabled: boolean;
-    fetchMore: boolean;
-    selectedBreed: string;
-    catList: Cat[];
-    error: Error | null;
-  };
+  state: State;
   dispatch: React.Dispatch<Action>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const BreedList = ({ state, setDisappear, dispatch }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
-
   const service = useGetBreeds();
 
   // Handle breed list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
-      dispatch({ type: 'loaded', catList: state.catList });
+      dispatch({ type: 'breedListLoaded' });
     } else if (service.status === 'error') {
       dispatch({ type: 'error', error: service.error });
     }
@@ -41,7 +33,7 @@ const BreedList = ({ state, setDisappear, dispatch }: Props) => {
     setDisappear(false);
   };
 
-  // handle user selecting default once breedlist already loaded
+   // handle user selecting default once breedlist already loaded
   useEffect(() => {
     if (breedList && state.selectedBreed === 'default') {
       dispatch({ type: 'reset', catList: [] });
