@@ -33,7 +33,6 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
       dispatch({ type: 'error', error: service.error });
     }
   }, [service, dispatch]);
-  // }, [service]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch({ type: 'button' });
@@ -62,11 +61,11 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
                 variant="success"
                 type="button"
                 disabled={
-                  state.catList.length === 0 || state.fetchMore ? true : false
+                  state.catList.length === 0 || state.loading ? true : false
                 }
                 onClick={handleClick}
               >
-                {state.selectedBreed === 'default' || !state.disabled
+                {state.selectedBreed === 'default' || !state.loading
                   ? 'Load more'
                   : 'Loading cats...'}
               </Button>

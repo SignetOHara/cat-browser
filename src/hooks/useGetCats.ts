@@ -13,8 +13,7 @@ export const useGetCats = ({ state }: Props) => {
   });
 
   useEffect(() => {
-    if (state.selectedBreed === 'default' || !state.fetchMore) {
-      // if (state.selectedBreed === 'default') {
+    if (state.selectedBreed === 'default' || !state.loading) {
       return;
     }
 
@@ -44,8 +43,7 @@ export const useGetCats = ({ state }: Props) => {
       }
     };
     fetchCatList();
-  }, [state.selectedBreed, state.fetchMore]);
-  // }, [state.fetchMore]);
+  }, [state.selectedBreed, state.loading]);
 
   return result;
 };

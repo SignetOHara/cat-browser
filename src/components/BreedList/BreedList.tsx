@@ -49,7 +49,7 @@ const BreedList = ({ state, dispatch, setDisappear }: Props) => {
           aria-label="Select Breed"
           value={state.selectedBreed}
           onChange={handleChange}
-          disabled={state.disabled}
+          disabled={state.loading}
         >
           <option value="default">Select breed</option>
           {breedList &&

@@ -2,8 +2,7 @@ import { Cat } from '../types/Cat';
 import { filterCats } from '../utils/utilities';
 
 export interface State {
-  disabled: boolean;
-  fetchMore: boolean;
+  loading: boolean;
   selectedBreed: string;
   catList: Cat[];
   error: Error | null;
@@ -34,54 +33,39 @@ export const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'select':
       return {
-        disabled: true,
-        fetchMore: true,
+        ...state,
+        loading: true,
         selectedBreed: action.selectedBreed,
         catList: [] as Cat[],
-        error: null,
       };
     case 'breedListLoaded':
       return {
-        disabled: false,
-        fetchMore: false,
-        selectedBreed: state.selectedBreed,
-        catList: state.catList,
-        error: null,
+        ...state,
+        loading: false,
       };
     case 'catListLoaded':
       return {
         ...state,
-        disabled: false,
-        fetchMore: false,
-        // selectedBreed: state.selectedBreed,
+        loading: false,
         catList: action.catList,
         disappear: action.setDisappear,
-        error: null,
       };
     case 'reset':
       return {
-        disabled: false,
-        fetchMore: false,
-        selectedBreed: state.selectedBreed,
+        ...state,
+        loading: false,
         catList: action.catList,
-        error: null,
       };
     case 'button':
       return {
         ...state,
-        disabled: true,
-        fetchMore: true,
-        // selectedBreed: state.selectedBreed,
-        // catList: state.catList,
-        error: null,
+        loading: true,
       };
     case 'error':
       return {
-        disabled: false,
-        fetchMore: false,
-        selectedBreed: state.selectedBreed,
+        ...state,
+        loading: false,
         error: action.error,
-        catList: state.catList,
       };
     default:
       throw new Error();

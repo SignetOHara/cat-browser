@@ -7,8 +7,7 @@ import { Cat } from './types/Cat';
 import './styles/main.scss';
 
 const initialState = {
-  disabled: true,
-  fetchMore: false,
+  loading: true,
   selectedBreed: 'default',
   catList: [] as Cat[],
   error: null,
