@@ -10,11 +10,12 @@ const initialState = {
   disabled: true,
   fetchMore: false,
   selectedBreed: 'default',
+  catList: [] as Cat[],
+  error: null,
 };
 
 function App() {
   const [selectedCat, setSelectedCat] = useState<Cat>({} as Cat);
-  const [catList, setCatList] = useState<Cat[]>([]);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
@@ -27,8 +28,6 @@ function App() {
             setSelectedCat={setSelectedCat}
             state={state}
             dispatch={dispatch}
-            catList={catList}
-            setCatList={setCatList}
           />
         )}
       ></Route>
@@ -37,7 +36,6 @@ function App() {
         render={() => (
           <CatPage
             selectedCat={selectedCat}
-            setCatList={setCatList}
             dispatch={dispatch}
           />
         )}

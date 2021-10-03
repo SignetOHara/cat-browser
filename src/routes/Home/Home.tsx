@@ -17,38 +17,26 @@ interface Props {
     disabled: boolean;
     fetchMore: boolean;
     selectedBreed: string;
+    catList: Cat[];
+    error: Error | null;
   };
   dispatch: React.Dispatch<Action>;
-  catList: Cat[];
-  setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
 }
 
-export const Home = ({
-  setSelectedCat,
-  state,
-  dispatch,
-  catList,
-  setCatList,
-}: Props) => {
-  const [error, setError] = useState<Error>();
+export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
   const [disappear, setDisappear] = useState(false);
-
-  const service = useGetCats({
-    catList,
-    setDisappear,
-    state,
-  });
+  const service = useGetCats({ setDisappear, state });
 
   // Handle cat list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {
-      setCatList((prevCats) => [...prevCats, ...service.payload]);
-      dispatch({ type: 'loaded' });
+      const { payload } = service;
+      const newCats = [...state.catList, ...payload];
+      dispatch({ type: 'loaded', catList: newCats });
     } else if (service.status === 'error') {
-      setError(service.error);
-      dispatch({ type: 'loaded' });
+      dispatch({ type: 'error', error: service.error });
     }
-  }, [service, setError, setCatList]);
+  }, [service.status]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch({ type: 'button' });
@@ -62,16 +50,13 @@ export const Home = ({
         </header>
         <Row className={styles.breedList}>
           <BreedList
-            selectedBreed={state.selectedBreed}
+            state={state}
             dispatch={dispatch}
-            setError={setError}
-            setCatList={setCatList}
             setDisappear={setDisappear}
-            disabled={state.disabled}
           />
         </Row>
         <Row>
-          <CatList catList={catList} setSelectedCat={setSelectedCat} />
+          <CatList catList={state.catList} setSelectedCat={setSelectedCat} />
         </Row>
         <Row>
           <Col xs={12} sm={6} md={3}>
@@ -79,7 +64,7 @@ export const Home = ({
               <Button
                 variant="success"
                 disabled={
-                  catList.length === 0 || state.fetchMore ? true : false
+                  state.catList.length === 0 || state.fetchMore ? true : false
                 }
                 onClick={handleClick}
               >
@@ -91,7 +76,7 @@ export const Home = ({
           </Col>
         </Row>
       </Container>
-      {error && <Error error={error} />}
+      {state.error && <Error error={state.error} />}
     </main>
   );
 };

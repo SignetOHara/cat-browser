@@ -9,15 +9,10 @@ import styles from './CatPage.module.scss';
 
 interface Props {
   selectedCat: Cat;
-  setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   dispatch: React.Dispatch<Action>;
 }
 
-export const CatPage = ({
-  selectedCat,
-  setCatList,
-  dispatch,
-}: Props) => {
+export const CatPage = ({ selectedCat, dispatch }: Props) => {
   const [loading, setLoading] = useState(true);
   const history = useHistory();
 
@@ -26,9 +21,8 @@ export const CatPage = ({
   const { id, name, origin, temperament, description } = catInfo[0];
 
   const handleReFetch = () => {
-    setCatList([]);
     history.push(`/?breed=${id}`);
-    dispatch({type: 'select', selectedBreed: id});
+    dispatch({ type: 'select', selectedBreed: id });
   };
 
   return (

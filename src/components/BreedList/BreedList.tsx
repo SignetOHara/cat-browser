@@ -8,22 +8,18 @@ import Col from 'react-bootstrap/Col';
 import styles from './BreedList.module.scss';
 
 interface Props {
-  selectedBreed: string;
+  state: {
+    disabled: boolean;
+    fetchMore: boolean;
+    selectedBreed: string;
+    catList: Cat[];
+    error: Error | null;
+  };
   dispatch: React.Dispatch<Action>;
-  setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
-  setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
-  disabled: boolean;
 }
 
-export const BreedList = ({
-  setError,
-  selectedBreed,
-  setCatList,
-  setDisappear,
-  disabled,
-  dispatch,
-}: Props) => {
+export const BreedList = ({ state, setDisappear, dispatch }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
 
   const service = useGetBreeds();
@@ -32,27 +28,25 @@ export const BreedList = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
-      dispatch({ type: 'loaded' });
+      dispatch({ type: 'loaded', catList: state.catList });
     } else if (service.status === 'error') {
-      setError(service.error);
-      dispatch({ type: 'loaded' });
+      dispatch({ type: 'error', error: service.error });
     }
-  }, [service, setError, dispatch]);
+  }, [service, dispatch]);
 
   // Handle user selecting a different breed in drop down - clears catList, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
     dispatch({ type: 'select', selectedBreed: breed });
-    setCatList([]);
     setDisappear(false);
   };
 
   // handle user selecting default once breedlist already loaded
   useEffect(() => {
-    if (breedList && selectedBreed === 'default') {
-      dispatch({ type: 'loaded' });
+    if (breedList && state.selectedBreed === 'default') {
+      dispatch({ type: 'reset', catList: [] });
     }
-  }, [dispatch, breedList, selectedBreed]);
+  }, [dispatch, breedList, state.selectedBreed]);
 
   return (
     <Col xs={12} sm={6} md={3}>
@@ -61,9 +55,9 @@ export const BreedList = ({
         <Form.Select
           id="breed"
           aria-label="Select Breed"
-          value={selectedBreed}
+          value={state.selectedBreed}
           onChange={handleChange}
-          disabled={disabled}
+          disabled={state.disabled}
         >
           <option value="default">Select breed</option>
           {breedList &&

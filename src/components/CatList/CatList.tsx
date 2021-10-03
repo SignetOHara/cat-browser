@@ -9,6 +9,9 @@ interface Props {
 }
 
 export const CatList = ({ catList, setSelectedCat }: Props) => {
+
+  console.log(catList);
+  
   if (catList.length === 0) {
     return (
       <Col xs={12} className={styles.noCats}>
