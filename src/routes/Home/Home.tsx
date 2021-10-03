@@ -18,6 +18,7 @@ interface Props {
 }
 
 export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
+  // Put disappear in reducer
   const [disappear, setDisappear] = useState(false);
   const service = useGetCats({ state });
 
@@ -32,6 +33,7 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
       dispatch({ type: 'error', error: service.error });
     }
   }, [service, dispatch]);
+  // }, [service]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     dispatch({ type: 'button' });
@@ -58,6 +60,7 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
             {!disappear && (
               <Button
                 variant="success"
+                type="button"
                 disabled={
                   state.catList.length === 0 || state.fetchMore ? true : false
                 }
@@ -67,7 +70,7 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
                   ? 'Load more'
                   : 'Loading cats...'}
               </Button>
-            )}
+             )}
           </Col>
         </Row>
       </Container>

@@ -35,7 +35,7 @@ export const reducer = (state: State, action: Action) => {
     case 'select':
       return {
         disabled: true,
-        fetchMore: false,
+        fetchMore: true,
         selectedBreed: action.selectedBreed,
         catList: [] as Cat[],
         error: null,
@@ -50,9 +50,10 @@ export const reducer = (state: State, action: Action) => {
       };
     case 'catListLoaded':
       return {
+        ...state,
         disabled: false,
         fetchMore: false,
-        selectedBreed: state.selectedBreed,
+        // selectedBreed: state.selectedBreed,
         catList: action.catList,
         disappear: action.setDisappear,
         error: null,
@@ -67,10 +68,11 @@ export const reducer = (state: State, action: Action) => {
       };
     case 'button':
       return {
+        ...state,
         disabled: true,
         fetchMore: true,
-        selectedBreed: state.selectedBreed,
-        catList: state.catList,
+        // selectedBreed: state.selectedBreed,
+        // catList: state.catList,
         error: null,
       };
     case 'error':

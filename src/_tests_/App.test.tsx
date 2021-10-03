@@ -1,23 +1,51 @@
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { Cat } from '../types/Cat';
 import { Home } from '../routes/Home/Home';
+
+const initialState = {
+  disabled: true,
+  fetchMore: false,
+  selectedBreed: 'default',
+  catList: [] as Cat[],
+  error: null,
+};
 
 describe('Home component', () => {
   const setState = jest.fn();
-  const useStateMock: any = (initState: any) => [initState, setState(0)];
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  const mockDispatch = jest.fn();
 
   test('renders Cat Browser heading', () => {
-    render(
+    const { getByText } = render(
       <Home
         setSelectedCat={setState}
-        state={useStateMock}
-        dispatch={setState}
+        state={initialState}
+        dispatch={mockDispatch}
       />
     );
-    const header = screen.getByText(/Cat Browser/i);
-    expect(header).toBeInTheDocument();
+    const header = getByText(/Cat Browser/i);
+    const buttonStatus = getByText(/Load more/i);
+    expect(header).toBeTruthy();
+    expect(buttonStatus).toBeTruthy();
+  });
+});
+
+describe('Home component not disabled', () => {
+  const setState = jest.fn();
+  const mockDispatch = jest.fn();
+
+  
+
+  test('renders Cat Browser heading', () => {
+    const { getByText } = render(
+      <Home
+        setSelectedCat={setState}
+        state={initialState}
+        dispatch={mockDispatch}
+      />
+    );
+    const header = getByText(/Cat Browser/i);
+    const buttonStatus = getByText(/Loading cats.../i);
+    expect(header).toBeTruthy();
+    expect(buttonStatus).toBeTruthy();
   });
 });

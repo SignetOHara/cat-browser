@@ -13,32 +13,39 @@ export const useGetCats = ({ state }: Props) => {
   });
 
   useEffect(() => {
-    if (state.selectedBreed === 'default') return;
-
-    setResult({ status: 'loading' });
-    const fetchCatList = async () => {
-      const requestHeaders: HeadersInit = new Headers();
-      requestHeaders.set('x-api-Key', process.env.REACT_APP_CAT_API as string);
-      const response = await fetch(
-        `https://api.thecatapi.com/v1/images/search?page=1&limit=10&breed_id=${state.selectedBreed}`,
-        {
-          headers: requestHeaders,
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const responseData = await response.json();
-      setResult({ status: 'loaded', payload: responseData });
-    };
-    try {
-      fetchCatList();
-    } catch (error: any) {
-      setResult({ status: 'error', error });
+    if (state.selectedBreed === 'default' || !state.fetchMore) {
+      // if (state.selectedBreed === 'default') {
+      return;
     }
+
+    const fetchCatList = async () => {
+      try {
+        setResult({ status: 'loading' });
+        const requestHeaders: HeadersInit = new Headers();
+        requestHeaders.set(
+          'x-api-Key',
+          process.env.REACT_APP_CAT_API as string
+        );
+        const response = await fetch(
+          `https://api.thecatapi.com/v1/images/search?page=1&limit=10&breed_id=${state.selectedBreed}`,
+          {
+            headers: requestHeaders,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        setResult({ status: 'loaded', payload: responseData });
+      } catch (error: any) {
+        setResult({ status: 'error', error });
+      }
+    };
+    fetchCatList();
   }, [state.selectedBreed, state.fetchMore]);
+  // }, [state.fetchMore]);
 
   return result;
 };

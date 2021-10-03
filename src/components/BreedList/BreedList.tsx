@@ -12,10 +12,10 @@ interface Props {
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const BreedList = ({ state, setDisappear, dispatch }: Props) => {
+const BreedList = ({ state, dispatch, setDisappear }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
   const service = useGetBreeds();
-  
+
   // Handle breed list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {
@@ -33,7 +33,7 @@ const BreedList = ({ state, setDisappear, dispatch }: Props) => {
     setDisappear(false);
   };
 
-   // handle user selecting default once breedlist already loaded
+  // handle user selecting default once breedlist already loaded
   useEffect(() => {
     if (breedList && state.selectedBreed === 'default') {
       dispatch({ type: 'reset', catList: [] });
