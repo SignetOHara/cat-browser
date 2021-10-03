@@ -1,49 +1,43 @@
-import { useState, useEffect, useReducer } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetCats } from '../../hooks/useGetCats';
 import { BreedList } from '../../components/BreedList/BreedList';
 import { CatList } from '../../components/CatList/CatList';
 import { Error } from '../../components/Error/Error';
 import { Cat } from '../../types/Cat';
-import { reducer } from '../../reducers/reducers';
+import { Action } from '../../reducers/reducers';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
-
 import styles from './Home.module.scss';
 
 interface Props {
   setSelectedCat: React.Dispatch<React.SetStateAction<Cat>>;
-  selectedBreed: string;
-  setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
+  state: {
+    disabled: boolean;
+    fetchMore: boolean;
+    selectedBreed: string;
+  };
+  dispatch: React.Dispatch<Action>;
   catList: Cat[];
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
 }
 
-const initialState = {
-  disabled: true,
-  fetchMore: false,
-};
-
 export const Home = ({
   setSelectedCat,
-  selectedBreed,
-  setSelectedBreed,
+  state,
+  dispatch,
   catList,
   setCatList,
 }: Props) => {
   const [error, setError] = useState<Error>();
   const [disappear, setDisappear] = useState(false);
-  const [state, dispatch] = useReducer(reducer, initialState);
 
   const service = useGetCats({
-    selectedBreed,
     catList,
     setDisappear,
     state,
   });
-
-  // <button onClick={() => dispatch({type: 'reset', payload: initialCount})}> Reset </button>
 
   // Handle cat list fetch success or fail state
   useEffect(() => {
@@ -68,12 +62,11 @@ export const Home = ({
         </header>
         <Row className={styles.breedList}>
           <BreedList
-            selectedBreed={selectedBreed}
-            setSelectedBreed={setSelectedBreed}
+            selectedBreed={state.selectedBreed}
+            dispatch={dispatch}
             setError={setError}
             setCatList={setCatList}
             setDisappear={setDisappear}
-            dispatch={dispatch}
             disabled={state.disabled}
           />
         </Row>
@@ -90,7 +83,7 @@ export const Home = ({
                 }
                 onClick={handleClick}
               >
-                {selectedBreed === 'default' || !state.disabled
+                {state.selectedBreed === 'default' || !state.disabled
                   ? 'Load more'
                   : 'Loading cats...'}
               </Button>

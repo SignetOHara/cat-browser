@@ -1,14 +1,21 @@
-import { useState } from 'react';
+import { useState, useReducer } from 'react';
 import { Switch, Route } from 'react-router';
 import { Home } from './routes/Home/Home';
+import { reducer } from './reducers/reducers';
 import { CatPage } from './routes/CatPage/CatPage';
 import { Cat } from './types/Cat';
 import './styles/main.scss';
 
+const initialState = {
+  disabled: true,
+  fetchMore: false,
+  selectedBreed: 'default',
+};
+
 function App() {
   const [selectedCat, setSelectedCat] = useState<Cat>({} as Cat);
   const [catList, setCatList] = useState<Cat[]>([]);
-  const [selectedBreed, setSelectedBreed] = useState('default');
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <Switch>
@@ -18,8 +25,8 @@ function App() {
         render={() => (
           <Home
             setSelectedCat={setSelectedCat}
-            selectedBreed={selectedBreed}
-            setSelectedBreed={setSelectedBreed}
+            state={state}
+            dispatch={dispatch}
             catList={catList}
             setCatList={setCatList}
           />
@@ -31,7 +38,7 @@ function App() {
           <CatPage
             selectedCat={selectedCat}
             setCatList={setCatList}
-            setSelectedBreed={setSelectedBreed}
+            dispatch={dispatch}
           />
         )}
       />

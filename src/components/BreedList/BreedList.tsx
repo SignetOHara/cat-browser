@@ -9,17 +9,15 @@ import styles from './BreedList.module.scss';
 
 interface Props {
   selectedBreed: string;
-  setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
+  dispatch: React.Dispatch<Action>;
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
   disabled: boolean;
-  dispatch: React.Dispatch<Action>;
 }
 
 export const BreedList = ({
   setError,
-  setSelectedBreed,
   selectedBreed,
   setCatList,
   setDisappear,
@@ -44,8 +42,7 @@ export const BreedList = ({
   // Handle user selecting a different breed in drop down - clears catList, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
-    dispatch({ type: 'select' });
-    setSelectedBreed(breed);
+    dispatch({ type: 'select', selectedBreed: breed });
     setCatList([]);
     setDisappear(false);
   };

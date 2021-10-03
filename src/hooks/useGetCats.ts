@@ -3,17 +3,16 @@ import { Service } from '../types/Service';
 import { Cat } from '../types/Cat';
 
 interface Props {
-  selectedBreed: string;
   catList: Cat[];
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
   state: {
     fetchMore: boolean;
     disabled: boolean;
+    selectedBreed: string;
   };
 }
 
 export const useGetCats = ({
-  selectedBreed,
   catList,
   setDisappear,
   state,
@@ -24,14 +23,14 @@ export const useGetCats = ({
 
   useEffect(() => {
 
-    if (selectedBreed === "default") return;
+    if (state.selectedBreed === "default") return;
 
     setResult({ status: 'loading' });
     const fetchCatList = async () => {
       const requestHeaders: HeadersInit = new Headers();
       requestHeaders.set('x-api-Key', process.env.REACT_APP_CAT_API as string);
       const response = await fetch(
-        `https://api.thecatapi.com/v1/images/search?page=1&limit=10&breed_id=${selectedBreed}`,
+        `https://api.thecatapi.com/v1/images/search?page=1&limit=10&breed_id=${state.selectedBreed}`,
         {
           headers: requestHeaders,
         }
@@ -68,7 +67,7 @@ export const useGetCats = ({
     } catch (error: any) {
       setResult({ status: 'error', error });
     }
-  }, [selectedBreed, state.fetchMore]);
+  }, [state.selectedBreed, state.fetchMore]);
 
   return result;
 };
