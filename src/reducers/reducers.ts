@@ -1,4 +1,5 @@
 import { Cat } from '../types/Cat';
+import { filterCats } from '../utils/utilities';
 
 export interface State {
   disabled: boolean;
@@ -11,12 +12,25 @@ export interface State {
 export type Action =
   | { type: 'select'; selectedBreed: string }
   | { type: 'breedListLoaded' }
-  | { type: 'catListLoaded'; catList: Cat[] }
+  | {
+      type: 'catListLoaded';
+      catList: Cat[];
+      setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
+    }
   | { type: 'reset'; catList: Cat[] }
   | { type: 'button' }
   | { type: 'error'; error: Error };
 
 export const reducer = (state: State, action: Action) => {
+  if (action.type === 'catListLoaded') {
+    const filteredCats = filterCats(state, action.catList);
+    const newCats = [...state.catList, ...filteredCats];
+    action.catList = newCats;
+    if (filteredCats.length === 0) {
+      action.setDisappear(true);
+    }
+  }
+
   switch (action.type) {
     case 'select':
       return {
@@ -40,6 +54,7 @@ export const reducer = (state: State, action: Action) => {
         fetchMore: false,
         selectedBreed: state.selectedBreed,
         catList: action.catList,
+        disappear: action.setDisappear,
         error: null,
       };
     case 'reset':

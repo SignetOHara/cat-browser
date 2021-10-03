@@ -33,12 +33,7 @@ function App() {
       ></Route>
       <Route
         path="/:id"
-        render={() => (
-          <CatPage
-            selectedCat={selectedCat}
-            dispatch={dispatch}
-          />
-        )}
+        render={() => <CatPage selectedCat={selectedCat} dispatch={dispatch} />}
       />
     </Switch>
   );

@@ -15,7 +15,7 @@ interface Props {
 const BreedList = ({ state, setDisappear, dispatch }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
   const service = useGetBreeds();
-
+  
   // Handle breed list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {

@@ -3,7 +3,6 @@ import { useGetCats } from '../../hooks/useGetCats';
 import { Error } from '../../components/Error/Error';
 import { Cat } from '../../types/Cat';
 import { Action, State } from '../../reducers/reducers';
-import { filterCats, handleData } from '../../utils/utilities';
 import BreedList from '../../components/BreedList/BreedList';
 import CatList from '../../components/CatList/CatList';
 import Container from 'react-bootstrap/Container';
@@ -22,20 +21,13 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
   const [disappear, setDisappear] = useState(false);
   const service = useGetCats({ state });
 
-  // useEffect(() => {
-  //   if (service.status === 'loaded') {
-  //     const cats = filterCats(state, service.payload);
-  //     handleData(cats, state, dispatch, setDisappear);
-  //   } else if (service.status === 'error') {
-  //     dispatch({ type: 'error', error: service.error });
-  //   }
-  // }, [service, dispatch]);
-
   useEffect(() => {
     if (service.status === 'loaded') {
-      const cats = service.payload;
-      // const cats = filterCats(state, service.payload);
-      handleData(cats, state, dispatch, setDisappear);
+      dispatch({
+        type: 'catListLoaded',
+        catList: service.payload,
+        setDisappear,
+      });
     } else if (service.status === 'error') {
       dispatch({ type: 'error', error: service.error });
     }
