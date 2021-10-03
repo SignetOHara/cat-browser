@@ -20,6 +20,9 @@ export const useGetCats = ({
   });
 
   useEffect(() => {
+
+    if (selectedBreed === "default") return;
+
     setResult({ status: 'loading' });
     const fetchCatList = async () => {
       const requestHeaders: HeadersInit = new Headers();
@@ -57,7 +60,6 @@ export const useGetCats = ({
         setDisappear(true);
       }
     };
-
     try {
       fetchCatList();
     } catch (error: any) {

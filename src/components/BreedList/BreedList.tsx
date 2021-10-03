@@ -10,7 +10,6 @@ interface Props {
   selectedBreed: string;
   setSelectedBreed: React.Dispatch<React.SetStateAction<string>>;
   setError: React.Dispatch<React.SetStateAction<Error | undefined>>;
-  catList: Cat[];
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
   disabled: boolean;
@@ -21,7 +20,6 @@ export const BreedList = ({
   setError,
   setSelectedBreed,
   selectedBreed,
-  catList,
   setCatList,
   setDisappear,
   disabled,
@@ -35,10 +33,12 @@ export const BreedList = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
+      setDisabled(false);
     } else if (service.status === 'error') {
       setError(service.error);
+      setDisabled(false);
     }
-  }, [service, setError]);
+  }, [service, setError, setDisabled]);
 
   // Handle user selecting a different breed in drop down - clears catList, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -48,6 +48,13 @@ export const BreedList = ({
     setCatList([]);
     setDisappear(false);
   };
+
+  // handle user selecting default once breedlist already loaded
+  useEffect(() => {
+    if (breedList && selectedBreed === 'default') {
+      setDisabled(false);
+    }
+  }, [breedList, selectedBreed, setDisabled]);
 
   return (
     <Col xs={12} sm={6} md={3}>

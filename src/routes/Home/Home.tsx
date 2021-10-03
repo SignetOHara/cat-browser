@@ -31,7 +31,6 @@ export const Home = ({
   const [disabled, setDisabled] = useState(true);
   const [fetchMore, setFetchMore] = useState(false);
 
-  // Initial fetch of catList
   const service = useGetCats({
     selectedBreed,
     catList,
@@ -68,7 +67,6 @@ export const Home = ({
             selectedBreed={selectedBreed}
             setSelectedBreed={setSelectedBreed}
             setError={setError}
-            catList={catList}
             setCatList={setCatList}
             setDisappear={setDisappear}
             disabled={disabled}
@@ -83,10 +81,12 @@ export const Home = ({
             {!disappear && (
               <Button
                 variant="success"
-                disabled={catList.length === 0 ? true : false}
+                disabled={catList.length === 0 || fetchMore ? true : false}
                 onClick={handleClick}
               >
-                {service.status === 'loading' ? 'Loading cats...' : 'Load more'}
+                {selectedBreed === 'default' || !disabled
+                  ? 'Load more'
+                  : 'Loading cats...'}
               </Button>
             )}
           </Col>
