@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useGetCats } from '../../hooks/useGetCats';
 import { Error } from '../../components/Error/Error';
 import { Cat } from '../../types/Cat';
@@ -18,16 +18,14 @@ interface Props {
 }
 
 export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
-  // Put disappear in reducer
-  const [disappear, setDisappear] = useState(false);
   const service = useGetCats({ state });
 
+  // If service successfully loaded, dispatch payload. If not, dispatch error
   useEffect(() => {
     if (service.status === 'loaded') {
       dispatch({
         type: 'catListLoaded',
         catList: service.payload,
-        setDisappear,
       });
     } else if (service.status === 'error') {
       dispatch({ type: 'error', error: service.error });
@@ -45,31 +43,25 @@ export const Home = ({ setSelectedCat, state, dispatch }: Props) => {
           <h1 className={styles.title}>Cat Browser</h1>
         </header>
         <Row className={styles.breedList}>
-          <BreedList
-            state={state}
-            dispatch={dispatch}
-            setDisappear={setDisappear}
-          />
+          <BreedList state={state} dispatch={dispatch} />
         </Row>
         <Row>
           <CatList catList={state.catList} setSelectedCat={setSelectedCat} />
         </Row>
         <Row>
           <Col xs={12} sm={6} md={3}>
-            {!disappear && (
+            {!state.disappear && (
               <Button
                 variant="success"
                 type="button"
-                disabled={
-                  state.catList.length === 0 || state.loading ? true : false
-                }
+                disabled={state.catList.length === 0 || state.loading}
                 onClick={handleClick}
               >
                 {state.selectedBreed === 'default' || !state.loading
                   ? 'Load more'
                   : 'Loading cats...'}
               </Button>
-             )}
+            )}
           </Col>
         </Row>
       </Container>

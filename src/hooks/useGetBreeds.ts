@@ -8,28 +8,31 @@ export const useGetBreeds = () => {
   });
 
   useEffect(() => {
-    setResult({ status: 'loading' });
     const fetchBreedList = async () => {
-      const requestHeaders: HeadersInit = new Headers();
-      requestHeaders.set('x-api-Key', process.env.REACT_APP_CAT_API as string);
+      try {
+        setResult({ status: 'loading' });
+        const requestHeaders: HeadersInit = new Headers();
+        requestHeaders.set(
+          'x-api-Key',
+          process.env.REACT_APP_CAT_API as string
+        );
 
-      const response = await fetch('https://api.thecatapi.com/v1/breeds/', {
-        headers: requestHeaders,
-      });
+        const response = await fetch('https://api.thecatapi.com/v1/breeds/', {
+          headers: requestHeaders,
+        });
 
-      // Throw error if http error
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Throw error if http error
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        setResult({ status: 'loaded', payload: responseData });
+      } catch (error: any) {
+        setResult({ status: 'error', error });
       }
-
-      const responseData = await response.json();
-      setResult({ status: 'loaded', payload: responseData });
     };
-    try {
-      fetchBreedList();
-    } catch (error: any) {
-      setResult({ status: 'error', error });
-    }
+    fetchBreedList();
   }, []);
 
   return result;

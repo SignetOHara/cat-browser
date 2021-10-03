@@ -4,13 +4,16 @@ import { Home } from './routes/Home/Home';
 import { reducer } from './reducers/reducers';
 import { CatPage } from './routes/CatPage/CatPage';
 import { Cat } from './types/Cat';
+import { Breed } from './types/Breed';
 import './styles/main.scss';
 
 const initialState = {
   loading: true,
   selectedBreed: 'default',
   catList: [] as Cat[],
+  breedList: [] as Breed[],
   error: null,
+  disappear: false,
 };
 
 function App() {

@@ -1,7 +1,6 @@
-import { memo, useState, useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useGetBreeds } from '../../hooks/useGetBreeds';
 import { Action, State } from '../../reducers/reducers';
-import { Breed } from '../../types/Breed';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import styles from './BreedList.module.scss';
@@ -9,36 +8,32 @@ import styles from './BreedList.module.scss';
 interface Props {
   state: State;
   dispatch: React.Dispatch<Action>;
-  setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const BreedList = ({ state, dispatch, setDisappear }: Props) => {
-  const [breedList, setBreedList] = useState<Breed[]>();
+const BreedList = ({ state, dispatch }: Props) => {
   const service = useGetBreeds();
 
-  // Handle breed list fetch success or fail state
+  // If breedList successfully loaded, dispatch payload. If not, dispatch error
   useEffect(() => {
     if (service.status === 'loaded') {
-      setBreedList(service.payload);
-      dispatch({ type: 'breedListLoaded' });
+      dispatch({ type: 'breedListLoaded', breedList: service.payload });
     } else if (service.status === 'error') {
       dispatch({ type: 'error', error: service.error });
     }
   }, [service, dispatch]);
 
-  // Handle user selecting a different breed in drop down - clears catList, redisplays load button
+  // Dispatches select action if user clicks a new item on drop down
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
     dispatch({ type: 'select', selectedBreed: breed });
-    setDisappear(false);
   };
 
-  // handle user selecting default once breedlist already loaded
+  // Dispatches reset action once breedlist already loaded and default drop down selected
   useEffect(() => {
-    if (breedList && state.selectedBreed === 'default') {
+    if (state.breedList && state.selectedBreed === 'default') {
       dispatch({ type: 'reset', catList: [] });
     }
-  }, [dispatch, breedList, state.selectedBreed]);
+  }, [dispatch, state.breedList, state.selectedBreed]);
 
   return (
     <Col xs={12} sm={6} md={3}>
@@ -49,11 +44,11 @@ const BreedList = ({ state, dispatch, setDisappear }: Props) => {
           aria-label="Select Breed"
           value={state.selectedBreed}
           onChange={handleChange}
-          disabled={state.loading}
+          disabled={state.loading || state.breedList.length === 0}
         >
           <option value="default">Select breed</option>
-          {breedList &&
-            breedList.map((breed) => (
+          {state.breedList &&
+            state.breedList.map((breed) => (
               <option key={breed.id} value={breed.id}>
                 {breed.name}
               </option>

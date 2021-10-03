@@ -3,12 +3,11 @@ import { Cat } from '../types/Cat';
 import { Home } from '../routes/Home/Home';
 
 const initialState = {
-  // disabled: true,
-  // fetchMore: false,
   loading: true,
   selectedBreed: 'default',
   catList: [] as Cat[],
   error: null,
+  disappear: false,
 };
 
 describe('Home component', () => {
@@ -33,8 +32,6 @@ describe('Home component', () => {
 describe('Home component not disabled', () => {
   const setState = jest.fn();
   const mockDispatch = jest.fn();
-
-
 
   test('renders Cat Browser heading', () => {
     const { getByText } = render(
