@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useGetCats } from '../../hooks/useGetCats';
-import { BreedList } from '../../components/BreedList/BreedList';
-import { CatList } from '../../components/CatList/CatList';
+import BreedList from '../../components/BreedList/BreedList';
+import CatList from '../../components/CatList/CatList';
 import { Error } from '../../components/Error/Error';
 import { Cat } from '../../types/Cat';
 import { Action } from '../../reducers/reducers';

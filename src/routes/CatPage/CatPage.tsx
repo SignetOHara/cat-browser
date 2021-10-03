@@ -17,7 +17,6 @@ export const CatPage = ({ selectedCat, dispatch }: Props) => {
   const history = useHistory();
 
   const catInfo = selectedCat.breeds;
-
   const { id, name, origin, temperament, description } = catInfo[0];
 
   const handleReFetch = () => {

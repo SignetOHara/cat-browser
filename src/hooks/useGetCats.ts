@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Service } from '../types/Service';
 import { Cat } from '../types/Cat';
 

@@ -1,9 +1,9 @@
+import { useHistory } from 'react-router-dom';
+import { Cat } from '../../../types/Cat';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import { Cat } from '../../../types/Cat';
 import styles from './CatCard.module.scss';
-import { useHistory } from 'react-router-dom';
 
 interface Props {
   cat: Cat;

@@ -1,6 +1,7 @@
-import Col from 'react-bootstrap/Col';
+import React from 'react';
 import { Cat } from '../../types/Cat';
 import { CatCard } from './Card/CatCard';
+import Col from 'react-bootstrap/Col';
 import styles from './CatList.module.scss';
 
 interface Props {
@@ -8,10 +9,7 @@ interface Props {
   setSelectedCat: React.Dispatch<React.SetStateAction<Cat>>;
 }
 
-export const CatList = ({ catList, setSelectedCat }: Props) => {
-
-  console.log(catList);
-  
+const CatList = ({ catList, setSelectedCat }: Props) => {
   if (catList.length === 0) {
     return (
       <Col xs={12} className={styles.noCats}>
@@ -28,3 +26,5 @@ export const CatList = ({ catList, setSelectedCat }: Props) => {
     );
   }
 };
+
+export default React.memo(CatList);

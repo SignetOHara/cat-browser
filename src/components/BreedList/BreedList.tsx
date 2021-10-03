@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { memo, useState, useEffect } from 'react';
 import { useGetBreeds } from '../../hooks/useGetBreeds';
 import { Action } from '../../reducers/reducers';
 import { Breed } from '../../types/Breed';
@@ -19,7 +19,7 @@ interface Props {
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const BreedList = ({ state, setDisappear, dispatch }: Props) => {
+const BreedList = ({ state, setDisappear, dispatch }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
 
   const service = useGetBreeds();
@@ -71,3 +71,5 @@ export const BreedList = ({ state, setDisappear, dispatch }: Props) => {
     </Col>
   );
 };
+
+export default memo(BreedList);
