@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { useGetCats } from '../../hooks/useGetCats';
 import { BreedList } from '../../components/BreedList/BreedList';
 import { CatList } from '../../components/CatList/CatList';
 import { Error } from '../../components/Error/Error';
 import { Cat } from '../../types/Cat';
+import { reducer } from '../../reducers/reducers';
 import Container from 'react-bootstrap/Container';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -19,6 +20,11 @@ interface Props {
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
 }
 
+const initialState = {
+  disabled: true,
+  fetchMore: false,
+};
+
 export const Home = ({
   setSelectedCat,
   selectedBreed,
@@ -28,32 +34,30 @@ export const Home = ({
 }: Props) => {
   const [error, setError] = useState<Error>();
   const [disappear, setDisappear] = useState(false);
-  const [disabled, setDisabled] = useState(true);
-  const [fetchMore, setFetchMore] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   const service = useGetCats({
     selectedBreed,
     catList,
     setDisappear,
-    fetchMore,
+    state,
   });
+
+  // <button onClick={() => dispatch({type: 'reset', payload: initialCount})}> Reset </button>
 
   // Handle cat list fetch success or fail state
   useEffect(() => {
     if (service.status === 'loaded') {
       setCatList((prevCats) => [...prevCats, ...service.payload]);
-      setDisabled(false);
-      setFetchMore(false);
+      dispatch({ type: 'loaded' });
     } else if (service.status === 'error') {
       setError(service.error);
-      setDisabled(false);
-      setFetchMore(false);
+      dispatch({ type: 'loaded' });
     }
   }, [service, setError, setCatList]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setFetchMore(true);
-    setDisabled(true);
+    dispatch({ type: 'button' });
   };
 
   return (
@@ -69,8 +73,8 @@ export const Home = ({
             setError={setError}
             setCatList={setCatList}
             setDisappear={setDisappear}
-            disabled={disabled}
-            setDisabled={setDisabled}
+            dispatch={dispatch}
+            disabled={state.disabled}
           />
         </Row>
         <Row>
@@ -81,10 +85,12 @@ export const Home = ({
             {!disappear && (
               <Button
                 variant="success"
-                disabled={catList.length === 0 || fetchMore ? true : false}
+                disabled={
+                  catList.length === 0 || state.fetchMore ? true : false
+                }
                 onClick={handleClick}
               >
-                {selectedBreed === 'default' || !disabled
+                {selectedBreed === 'default' || !state.disabled
                   ? 'Load more'
                   : 'Loading cats...'}
               </Button>

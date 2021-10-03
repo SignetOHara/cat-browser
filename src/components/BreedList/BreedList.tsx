@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useGetBreeds } from '../../hooks/useGetBreeds';
+import { Action } from '../../reducers/reducers';
 import { Breed } from '../../types/Breed';
 import { Cat } from '../../types/Cat';
 import Form from 'react-bootstrap/Form';
@@ -13,7 +14,7 @@ interface Props {
   setCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
   disabled: boolean;
-  setDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  dispatch: React.Dispatch<Action>;
 }
 
 export const BreedList = ({
@@ -23,7 +24,7 @@ export const BreedList = ({
   setCatList,
   setDisappear,
   disabled,
-  setDisabled,
+  dispatch,
 }: Props) => {
   const [breedList, setBreedList] = useState<Breed[]>();
 
@@ -33,18 +34,18 @@ export const BreedList = ({
   useEffect(() => {
     if (service.status === 'loaded') {
       setBreedList(service.payload);
-      setDisabled(false);
+      dispatch({ type: 'loaded' });
     } else if (service.status === 'error') {
       setError(service.error);
-      setDisabled(false);
+      dispatch({ type: 'loaded' });
     }
-  }, [service, setError, setDisabled]);
+  }, [service, setError, dispatch]);
 
   // Handle user selecting a different breed in drop down - clears catList, redisplays load button
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const breed = e.target.value;
+    dispatch({ type: 'select' });
     setSelectedBreed(breed);
-    setDisabled(true);
     setCatList([]);
     setDisappear(false);
   };
@@ -52,9 +53,9 @@ export const BreedList = ({
   // handle user selecting default once breedlist already loaded
   useEffect(() => {
     if (breedList && selectedBreed === 'default') {
-      setDisabled(false);
+      dispatch({ type: 'loaded' });
     }
-  }, [breedList, selectedBreed, setDisabled]);
+  }, [dispatch, breedList, selectedBreed]);
 
   return (
     <Col xs={12} sm={6} md={3}>

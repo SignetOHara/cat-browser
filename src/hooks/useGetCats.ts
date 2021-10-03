@@ -6,14 +6,17 @@ interface Props {
   selectedBreed: string;
   catList: Cat[];
   setDisappear: React.Dispatch<React.SetStateAction<boolean>>;
-  fetchMore: boolean;
+  state: {
+    fetchMore: boolean;
+    disabled: boolean;
+  };
 }
 
 export const useGetCats = ({
   selectedBreed,
   catList,
   setDisappear,
-  fetchMore,
+  state,
 }: Props) => {
   const [result, setResult] = useState<Service<Cat[]>>({
     status: 'loading',
@@ -65,7 +68,7 @@ export const useGetCats = ({
     } catch (error: any) {
       setResult({ status: 'error', error });
     }
-  }, [selectedBreed, fetchMore]);
+  }, [selectedBreed, state.fetchMore]);
 
   return result;
 };
