@@ -1,0 +1,21 @@
+.home {
+  padding: 1.25rem 0;
+}
+
+.container {
+  padding: 0 0.9375rem !important;
+}
+
+.title {
+  font-size: 2.5rem !important;
+}
+
+.breedList {
+  padding: 0.625rem 0;
+}
+
+@media screen and (min-width: 1400px) {
+  .container {
+    max-width: 1140px !important;
+  }
+}
