@@ -1,4 +1,4 @@
-## Cat Browser project for Iona Studios. 
+## Cat Browser test project. 
 
 Built with: 
 - Typescript
